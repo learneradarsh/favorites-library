@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { EntertainmentData } from 'src/app/models/Entertainment.model';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-my-favorites',
@@ -7,9 +10,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MyFavoritesComponent implements OnInit {
 
-  constructor() { }
+  myFavList$: Observable<EntertainmentData[]> = of([]);
+
+  constructor(private readonly dataService: DataService) { }
 
   ngOnInit(): void {
+    this.myFavList$ = this.dataService.getFavItems$();
   }
 
 }

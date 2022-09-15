@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { NEVER, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { EntertainmentData } from 'src/app/models/Entertainment.model';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -10,13 +10,17 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class HomeComponent implements OnInit {
 
-  entertainmentItems$: Observable<any> = of(null);
+  entertainmentItems$: Observable<EntertainmentData[]> = of([]);
 
-  constructor(private readonly dataService: DataService,
-    private readonly router: Router) { }
+  constructor(private readonly dataService: DataService) { }
 
   ngOnInit(): void {
-    this.entertainmentItems$ = this.dataService.getEntertainmentLibData$();
+    this.entertainmentItems$ = this.dataService.getAllEntertainmentData$();
+  }
+
+  onAddToFavorite(item: EntertainmentData) {
+    console.log('data coming', item);
+    this.dataService.addItemToFav(item);
   }
 
 }

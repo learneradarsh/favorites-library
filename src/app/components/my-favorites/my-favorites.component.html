@@ -1,1 +1,11 @@
-<p>my-favorites works!</p>
+<h2>List of My Favorites</h2>
+<section class="my-fav-container">
+<ng-container *ngIf="(myFavList$ | async) as myFavList; else loader">
+    <ng-container *ngFor="let myFavData of myFavList">
+        <app-data-card [cardData]="myFavData" [showButton]="false"></app-data-card>
+    </ng-container>
+</ng-container>
+<ng-template #loader>
+    <app-loader></app-loader>
+</ng-template>
+</section>

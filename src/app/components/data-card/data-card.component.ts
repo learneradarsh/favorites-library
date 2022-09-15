@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { EntertainmentData } from 'src/app/models/Entertainment.model';
 
 @Component({
   selector: 'app-data-card',
@@ -8,9 +9,23 @@ import { Component, Input, OnInit } from '@angular/core';
 export class DataCardComponent implements OnInit {
   @Input()
   cardData: any;
+
+  @Input()
+  showButton: boolean = true;
+
+  @Output()
+  addToFavorite: EventEmitter<EntertainmentData> = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  addToFav(favItem: EntertainmentData) {
+    console.log(favItem);
+    this.addToFavorite.emit({
+      ...favItem,
+      isFav: true,
+    });
   }
 
 }

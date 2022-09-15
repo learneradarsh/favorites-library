@@ -8,6 +8,7 @@ import { HomeComponent } from './components/home/home.component';
 import { MyFavoritesComponent } from './components/my-favorites/my-favorites.component';
 import { DataCardComponent } from './components/data-card/data-card.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     HomeComponent,
     MyFavoritesComponent,
     DataCardComponent,
-    NavbarComponent
+    NavbarComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,

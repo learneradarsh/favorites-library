@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, combineLatest, concatMap, forkJoin, map, Observable, of, retry, share, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, concatMap, forkJoin, map, Observable, of, retry, share, shareReplay, tap, throwError } from 'rxjs';
 import { EntertainmentData } from '../models/Entertainment.model';
+import * as uuid from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,15 @@ export class DataService {
     retry(1)
   );
 
-  constructor(private readonly http: HttpClient) { }
+  private myFavoritesSub = new BehaviorSubject<EntertainmentData[]>([]);
+  private allEntertainmentDataSub = new BehaviorSubject<EntertainmentData[]>([]);
+
+  constructor(private readonly http: HttpClient) { 
+    this.getCombinedDataFromAPI$().pipe(
+      tap((data) => this.allEntertainmentDataSub.next(data))
+    ).subscribe()
+    
+  }
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage;
@@ -36,26 +45,54 @@ export class DataService {
 
     const transformedPlanets = allData[0].results.map((planet: any)  => {
       return {
-        id: planet.created,
+        id: uuid.v4(),
         title: planet.name,
-        category: 'planet'
+        category: 'planet',
+        imageUrl: planet['imageUrl'] ? planet['url'] : 'https://png.pngtree.com/png-clipart/20190614/original/pngtree-ui-default-page-cartoon-cute-cat-png-image_3806397.jpg',
+        isFav: false
       }
     });
     const transformedMovies = allData[1].results.map((movie: any)  => {
       return {
-        id: movie.created,
+        id: uuid.v4(),
         title: movie.title,
-        category: 'movie'
+        category: 'movie',
+        imageUrl: movie['imageUrl'] ? movie['url'] : 'https://png.pngtree.com/png-clipart/20190614/original/pngtree-ui-default-page-cartoon-cute-cat-png-image_3806397.jpg',
+        isFav: false
       }
     });
     return [...transformedPlanets, ...transformedMovies];
   }
 
-   getEntertainmentLibData$() {
+   private getCombinedDataFromAPI$(): Observable<EntertainmentData[]> {
     return forkJoin([this.planets$, this.movies$]).pipe(
       map((response) => this.transformData$(response)),
       tap(console.log),
       shareReplay()
     );
+  }
+  
+  getAllEntertainmentData$(): Observable<EntertainmentData[]> {
+    return this.allEntertainmentDataSub;
+  }
+
+  addItemToFav(item: EntertainmentData): void {
+    this.myFavoritesSub.next([item, ...this.myFavoritesSub.value]);
+    let allEntertainmentData = this.allEntertainmentDataSub.value;
+    allEntertainmentData = allEntertainmentData.map(data => {
+      if(data.id === item.id) {
+        data = {
+          ...item
+        }
+      }
+      return data;
+    })
+    this.allEntertainmentDataSub.next(allEntertainmentData);
+  }
+
+  getFavItems$(): Observable<EntertainmentData[]>{
+    return this.myFavoritesSub.pipe(
+      tap(console.log)
+    )
   }
 }
