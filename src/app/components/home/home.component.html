@@ -3,7 +3,7 @@
 </section>
 
 <section class="search-results-container">
-    <ng-container *ngIf="(combinedData$ | async) as dataList; else loader">
+    <ng-container *ngIf="(entertainmentItems$ | async) as dataList; else loader">
         <ng-container *ngFor="let data of dataList">
             <app-data-card [cardData]="data"></app-data-card>
         </ng-container>
