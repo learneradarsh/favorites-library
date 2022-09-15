@@ -26,8 +26,10 @@ export class DataService {
       tap((data) => this.allEntertainmentDataSub.next(data))
     ).subscribe();
 
-    if(localStorage.getItem('my-fav') !== undefined
-    || localStorage.getItem('my-fav') !== null) {
+
+    // load data of myfavs from localstorage if available
+    if(localStorage.getItem('my-fav') != undefined
+    && localStorage.getItem('my-fav') != null) {
       this.myFavoritesSub.next(JSON.parse(localStorage.getItem('my-fav')!));
     }
     
@@ -82,7 +84,7 @@ export class DataService {
   }
 
   addItemToFav(item: EntertainmentData): void {
-    this.myFavoritesSub.next([item, ...this.myFavoritesSub.value]);
+    this.myFavoritesSub.next([...this.myFavoritesSub.value, item]);
 
     // store favorites data to local storage
     localStorage.setItem('my-fav', JSON.stringify(this.myFavoritesSub.value));
