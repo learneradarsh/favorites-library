@@ -24,7 +24,12 @@ export class DataService {
   constructor(private readonly http: HttpClient) { 
     this.getCombinedDataFromAPI$().pipe(
       tap((data) => this.allEntertainmentDataSub.next(data))
-    ).subscribe()
+    ).subscribe();
+
+    if(localStorage.getItem('my-fav') !== undefined
+    || localStorage.getItem('my-fav') !== null) {
+      this.myFavoritesSub.next(JSON.parse(localStorage.getItem('my-fav')!));
+    }
     
   }
 
@@ -78,6 +83,11 @@ export class DataService {
 
   addItemToFav(item: EntertainmentData): void {
     this.myFavoritesSub.next([item, ...this.myFavoritesSub.value]);
+
+    // store favorites data to local storage
+    localStorage.setItem('my-fav', JSON.stringify(this.myFavoritesSub.value));
+
+    // update global entertainment data
     let allEntertainmentData = this.allEntertainmentDataSub.value;
     allEntertainmentData = allEntertainmentData.map(data => {
       if(data.id === item.id) {
