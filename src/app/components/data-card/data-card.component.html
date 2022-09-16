@@ -1,5 +1,5 @@
 <div class="fav-data-card-container">
     <img [src]="cardData.imageUrl" width="250px"/>
     <h2>{{cardData.title}} - {{cardData.category}}</h2>
-    <button *ngIf="showButton" type="button" (click)="addToFav(cardData)" [disabled]="cardData.isFav">{{cardData.isFav ? 'Added To Favorites' : 'Add To Favorites'}} </button>
+    <button *ngIf="showButton" class="btn-black" type="button" (click)="addToFav(cardData)" [disabled]="cardData.isFav">{{cardData.isFav ? 'Added To Favorites' : 'Add To Favorites'}} </button>
 </div>
