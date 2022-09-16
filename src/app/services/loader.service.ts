@@ -15,7 +15,6 @@ export class LoaderService {
   }
 
   loaderOff() {
-    console.log('loader off');
     this.loaderSub.next(false);
   }
 }

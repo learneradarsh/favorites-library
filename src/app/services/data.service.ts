@@ -11,7 +11,7 @@ export class DataService {
 
   private readonly basePath: string = 'https://swapi.dev/api';
 
-  private readonly movies$ = this.http.get(`${this.basePath}/film/`).pipe(catchError(e => of({
+  private readonly movies$ = this.http.get(`${this.basePath}/films/`).pipe(catchError(e => of({
     count: 0,
     next: null,
     previous: null,
@@ -68,7 +68,6 @@ export class DataService {
    private getCombinedDataFromAPI$(): Observable<EntertainmentData[]> {
     return forkJoin([this.planets$, this.movies$]).pipe(
       map((response) => this.transformData$(response)),
-      tap(console.log),
       shareReplay()
     );
   }
@@ -97,9 +96,7 @@ export class DataService {
   }
 
   getFavItems$(): Observable<EntertainmentData[]>{
-    return this.myFavoritesSub.pipe(
-      tap(console.log)
-    )
+    return this.myFavoritesSub
   }
 
   searchBy(term: string): Observable<EntertainmentData[]> {
