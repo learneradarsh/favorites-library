@@ -1,17 +1,18 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, retry, throwError } from 'rxjs';
+import { catchError, finalize, retry, throwError } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
+import { LoaderService } from '../services/loader.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ErrorHandingInterceptor implements HttpInterceptor {
 
-  constructor() { }
+  constructor(private readonly loaderService: LoaderService) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
+    this.loaderService.loaderOn();
     return next.handle(request)
  
       .pipe(
@@ -28,8 +29,8 @@ export class ErrorHandingInterceptor implements HttpInterceptor {
           window.alert(errorMessage);
           throw new Error(errorMessage);
  
-        })
- 
+        }),
+        finalize(() => this.loaderService.loaderOff())
       )
  
   }

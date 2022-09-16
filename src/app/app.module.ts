@@ -23,7 +23,7 @@ import { ErrorHandingInterceptor } from './interceptors/error-handling-intercept
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

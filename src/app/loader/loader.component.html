@@ -1,1 +1,5 @@
-<h2 class="loader">Data is loading...</h2>
+<ng-container *ngIf="loaderService.loading$ | async">
+    <div class="loader">
+        <h2>Loading...</h2>
+    </div>
+</ng-container>

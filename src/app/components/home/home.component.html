@@ -3,12 +3,10 @@
 </section>
 
 <section class="search-results-container">
-    <ng-container *ngIf="(entertainmentItems$ | async) as dataList; else loader">
+    <ng-container *ngIf="(entertainmentItems$ | async) as dataList">
         <ng-container *ngFor="let data of dataList">
             <app-data-card [cardData]="data" (addToFavorite)="onAddToFavorite($event)"></app-data-card>
         </ng-container>
     </ng-container>
-    <ng-template #loader>
-        <h2>Data Loading...</h2>
-    </ng-template>
+    <app-loader></app-loader>
 </section>

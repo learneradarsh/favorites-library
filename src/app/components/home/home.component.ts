@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { finalize, Observable, of, tap } from 'rxjs';
 import { EntertainmentData } from 'src/app/models/Entertainment.model';
 import { DataService } from 'src/app/services/data.service';
+import { LoaderService } from 'src/app/services/loader.service';
 
 @Component({
   selector: 'app-home',
@@ -24,7 +25,7 @@ export class HomeComponent implements OnInit {
 
   search(term: string): void {
     const sanitizedSearchTerm = term.trim().toLowerCase();
-    this.entertainmentItems$ = this.dataService.searchBy(term);
+    this.entertainmentItems$ = this.dataService.searchBy(sanitizedSearchTerm);
   }
 
 }
