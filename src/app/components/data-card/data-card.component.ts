@@ -21,7 +21,6 @@ export class DataCardComponent implements OnInit {
   }
 
   addToFav(favItem: EntertainmentData) {
-    console.log(favItem);
     this.addToFavorite.emit({
       ...favItem,
       isFav: true,

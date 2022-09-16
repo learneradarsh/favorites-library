@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, catchError, combineLatest, concatMap, forkJoin, map, Observable, of, retry, share, shareReplay, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, concatMap, filter, forkJoin, map, Observable, of, retry, share, shareReplay, tap, throwError } from 'rxjs';
 import { EntertainmentData } from '../models/Entertainment.model';
 import * as uuid from 'uuid';
 
@@ -106,5 +106,11 @@ export class DataService {
     return this.myFavoritesSub.pipe(
       tap(console.log)
     )
+  }
+
+  searchBy(term: string): Observable<EntertainmentData[]> {
+    const allEntertainmentData = this.allEntertainmentDataSub.value;
+    let searchResult = allEntertainmentData.filter((data: EntertainmentData) => data.title.toLocaleLowerCase().includes(term));
+    return of(searchResult);
   }
 }
