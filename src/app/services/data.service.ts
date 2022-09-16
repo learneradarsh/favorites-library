@@ -11,8 +11,18 @@ export class DataService {
 
   private readonly basePath: string = 'https://swapi.dev/api';
 
-  private readonly movies$ = this.http.get(`${this.basePath}/films/`);
-  private readonly planets$ = this.http.get(`${this.basePath}/planets/`);
+  private readonly movies$ = this.http.get(`${this.basePath}/film/`).pipe(catchError(e => of({
+    count: 0,
+    next: null,
+    previous: null,
+    results: []
+  })));
+  private readonly planets$ = this.http.get(`${this.basePath}/planets/`).pipe(catchError(e => of({
+    count: 0,
+    next: null,
+    previous: null,
+    results: []
+  })));
 
   private myFavoritesSub = new BehaviorSubject<EntertainmentData[]>([]);
   private allEntertainmentDataSub = new BehaviorSubject<EntertainmentData[]>([]);
