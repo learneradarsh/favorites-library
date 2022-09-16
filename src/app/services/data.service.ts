@@ -9,14 +9,10 @@ import * as uuid from 'uuid';
 })
 export class DataService {
 
-  basePath: string = 'https://swapi.dev/api';
+  private readonly basePath: string = 'https://swapi.dev/api';
 
-  movies$ = this.http.get(`${this.basePath}/films/`).pipe(
-    retry(1),
-    );
-  planets$ = this.http.get(`${this.basePath}/planets/`).pipe(
-    retry(1)
-  );
+  private readonly movies$ = this.http.get(`${this.basePath}/films/`);
+  private readonly planets$ = this.http.get(`${this.basePath}/planets/`);
 
   private myFavoritesSub = new BehaviorSubject<EntertainmentData[]>([]);
   private allEntertainmentDataSub = new BehaviorSubject<EntertainmentData[]>([]);
@@ -34,19 +30,7 @@ export class DataService {
     }
     
   }
-
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage;
-    if(error.error instanceof ErrorEvent) {
-      errorMessage = error.error.message;
-    } else {
-      errorMessage = `${error.status} ${error.message}`
-    }
-
-    window.alert(errorMessage);
-
-    throw new Error(errorMessage);
-  }
+  
 
   private transformData$(allData: any): EntertainmentData[] {
 

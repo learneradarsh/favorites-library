@@ -18,11 +18,11 @@ export class HomeComponent implements OnInit {
     this.entertainmentItems$ = this.dataService.getAllEntertainmentData$();
   }
 
-  onAddToFavorite(item: EntertainmentData) {
+  onAddToFavorite(item: EntertainmentData): void {
     this.dataService.addItemToFav(item);
   }
 
-  search(term: string) {
+  search(term: string): void {
     const sanitizedSearchTerm = term.trim().toLowerCase();
     this.entertainmentItems$ = this.dataService.searchBy(term);
   }
