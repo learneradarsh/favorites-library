@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { EntertainmentData } from 'src/app/models/Entertainment.model';
 import { DataService } from 'src/app/services/data.service';
@@ -6,7 +6,8 @@ import { DataService } from 'src/app/services/data.service';
 @Component({
   selector: 'app-my-favorites',
   templateUrl: './my-favorites.component.html',
-  styleUrls: ['./my-favorites.component.scss']
+  styleUrls: ['./my-favorites.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyFavoritesComponent implements OnInit {
 

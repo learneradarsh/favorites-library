@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { finalize, Observable, of, tap } from 'rxjs';
 import { EntertainmentData } from 'src/app/models/Entertainment.model';
 import { DataService } from 'src/app/services/data.service';
-import { LoaderService } from 'src/app/services/loader.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
 
@@ -27,6 +26,10 @@ export class HomeComponent implements OnInit {
   searchByCategory(term: string, category: string): void {
     const sanitizedSearchTerm = term.trim().toLowerCase();
     this.entertainmentItems$ = this.dataService.searchBy(sanitizedSearchTerm, category);
+  }
+
+  trackByFn(index: any, item: any) {
+    return index;
   }
 
 }

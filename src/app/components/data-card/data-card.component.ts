@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EntertainmentData } from 'src/app/models/Entertainment.model';
 
 @Component({
   selector: 'app-data-card',
   templateUrl: './data-card.component.html',
-  styleUrls: ['./data-card.component.scss']
+  styleUrls: ['./data-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DataCardComponent implements OnInit {
   @Input()

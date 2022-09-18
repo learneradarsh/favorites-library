@@ -116,12 +116,6 @@ export class DataService {
     return this.myFavoritesSub
   }
 
-  // searchBy(term: string): Observable<EntertainmentData[]> {
-  //   const allEntertainmentData = this.allEntertainmentDataSub.value;
-  //   let searchResult = allEntertainmentData.filter((data: EntertainmentData) => data.title.toLocaleLowerCase().includes(term));
-  //   return of(searchResult);
-  // }
-
   private searchInLocalData(term: string):  EntertainmentData[]{
     const allEntertainmentData = this.allEntertainmentDataSub.value;
     let searchResult = allEntertainmentData.filter((data: EntertainmentData) => data.title.toLocaleLowerCase().includes(term));
@@ -144,7 +138,8 @@ export class DataService {
     } else {
       return this.searchInDB(term, category).pipe(
         map(response => response['results']),
-        map(data => this.transformSearchResults(data))
+        map(data => this.transformSearchResults(data)),
+        tap(console.log)
       )
     }
     }
