@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { finalize, Observable, of, tap } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { EntertainmentData } from 'src/app/models/Entertainment.model';
 import { DataService } from 'src/app/services/data.service';
 
@@ -28,8 +28,8 @@ export class HomeComponent implements OnInit {
     this.entertainmentItems$ = this.dataService.searchBy(sanitizedSearchTerm, category);
   }
 
-  trackByFn(index: any, item: any) {
-    return index;
+  trackByFn(index: any, data: any) {
+    return data.id;
   }
 
 }

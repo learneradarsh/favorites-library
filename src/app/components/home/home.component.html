@@ -4,7 +4,7 @@
 
 <section class="search-results-container">
     <ng-container *ngIf="(entertainmentItems$ | async) as dataList">
-        <ng-container *ngFor="let data of dataList; trackByFn">
+        <ng-container *ngFor="let data of dataList;trackBy: trackByFn">
             <app-data-card [cardData]="data" (addToFavorite)="onAddToFavorite($event)"></app-data-card>
         </ng-container>
     </ng-container>

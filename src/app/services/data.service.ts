@@ -1,8 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, catchError, combineLatest, concatMap, filter, forkJoin, map, Observable, of, retry, share, shareReplay, tap, throwError } from 'rxjs';
-import { EntertainmentData } from '../models/Entertainment.model';
+import { BehaviorSubject, catchError, forkJoin, map, Observable, of, shareReplay, tap, throwError } from 'rxjs';
 import * as uuid from 'uuid';
+import { MY_FAV } from '../constants';
+import { EntertainmentData } from '../models/Entertainment.model';
 import { BrowserService } from './browser.service';
 
 @Injectable({
@@ -12,13 +13,13 @@ export class DataService {
 
   private readonly basePath: string = 'https://swapi.dev/api';
 
-  private readonly movies$ = this.http.get(`${this.basePath}/films/`).pipe(catchError(e => of({
+  private readonly movies$ = this.http.get(`${this.basePath}/films/`).pipe(catchError(() => of({
     count: 0,
     next: null,
     previous: null,
     results: []
   })));
-  private readonly planets$ = this.http.get(`${this.basePath}/planets/`).pipe(catchError(e => of({
+  private readonly planets$ = this.http.get(`${this.basePath}/planets/`).pipe(catchError(() => of({
     count: 0,
     next: null,
     previous: null,
@@ -36,15 +37,15 @@ export class DataService {
 
 
     // load data of myfavs from localstorage if available
-    if(this.browserService.retrieveDataFromLocalStorage('my-fav') != undefined
-    && this.browserService.retrieveDataFromLocalStorage('my-fav') != null) {
-      this.myFavoritesSub.next(JSON.parse(this.browserService.retrieveDataFromLocalStorage('my-fav')!));
+    if(this.browserService.retrieveDataFromLocalStorage(MY_FAV) != undefined
+    && this.browserService.retrieveDataFromLocalStorage(MY_FAV) != null) {
+      this.myFavoritesSub.next(JSON.parse(this.browserService.retrieveDataFromLocalStorage(MY_FAV)!));
     }
     
   }
 
 
-  private transformSearchResults(searchResults: any[]): EntertainmentData[] {
+  private transformSearchResults<T>(searchResults: T[]): EntertainmentData[] {
     const transformedResults = searchResults.map((searchItem: any) => {
       return {
         id: uuid.v4(),
@@ -97,7 +98,7 @@ export class DataService {
     this.myFavoritesSub.next([...this.myFavoritesSub.value, item]);
 
     // store favorites data to local storage
-    this.browserService.storeDataInLocalStorage('my-fav', JSON.stringify(this.myFavoritesSub.value));
+    this.browserService.storeDataInLocalStorage(MY_FAV, JSON.stringify(this.myFavoritesSub.value));
 
     // update global entertainment data
     let allEntertainmentData = this.allEntertainmentDataSub.value;
@@ -113,7 +114,7 @@ export class DataService {
   }
 
   getFavItems$(): Observable<EntertainmentData[]>{
-    return this.myFavoritesSub
+    return this.myFavoritesSub;
   }
 
   private searchInLocalData(term: string):  EntertainmentData[]{
@@ -140,7 +141,7 @@ export class DataService {
         map(response => response['results']),
         map(data => this.transformSearchResults(data)),
         tap(console.log)
-      )
+      );
     }
     }
 }
