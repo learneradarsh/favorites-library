@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, finalize, retry, throwError } from 'rxjs';
+import { catchError, finalize, retry, tap, throwError } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { LoaderService } from '../services/loader.service';
 

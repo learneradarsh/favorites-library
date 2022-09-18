@@ -42,9 +42,24 @@ export class DataService {
     }
     
   }
+
+
+  private transformSearchResults(searchResults: any[]): EntertainmentData[] {
+    const transformedResults = searchResults.map((searchItem: any) => {
+      return {
+        id: uuid.v4(),
+        title: searchItem.name,
+        category: 'planet',
+        imageUrl: searchItem['imageUrl'] ? searchItem['url'] : 'https://png.pngtree.com/png-clipart/20190614/original/pngtree-ui-default-page-cartoon-cute-cat-png-image_3806397.jpg',
+        isFav: false
+      }
+    });
+
+    return transformedResults;
+  }
   
 
-  private transformData$(allData: any): EntertainmentData[] {
+  private transformData(allData: any): EntertainmentData[] {
 
     const transformedPlanets = allData[0].results.map((planet: any)  => {
       return {
@@ -69,7 +84,7 @@ export class DataService {
 
    private getCombinedDataFromAPI$(): Observable<EntertainmentData[]> {
     return forkJoin([this.planets$, this.movies$]).pipe(
-      map((response) => this.transformData$(response)),
+      map((response) => this.transformData(response)),
       shareReplay()
     );
   }
@@ -101,9 +116,36 @@ export class DataService {
     return this.myFavoritesSub
   }
 
-  searchBy(term: string): Observable<EntertainmentData[]> {
+  // searchBy(term: string): Observable<EntertainmentData[]> {
+  //   const allEntertainmentData = this.allEntertainmentDataSub.value;
+  //   let searchResult = allEntertainmentData.filter((data: EntertainmentData) => data.title.toLocaleLowerCase().includes(term));
+  //   return of(searchResult);
+  // }
+
+  private searchInLocalData(term: string):  EntertainmentData[]{
     const allEntertainmentData = this.allEntertainmentDataSub.value;
     let searchResult = allEntertainmentData.filter((data: EntertainmentData) => data.title.toLocaleLowerCase().includes(term));
-    return of(searchResult);
+    return searchResult;
   }
+
+  private searchInDB(term: string, category: string = 'planets'): Observable<any> {
+    return this.http.get(`${this.basePath}/${category}/?search=${term}`).pipe(catchError((e) => of({
+      count: 0,
+      next: null,
+      previous: null,
+      results: []
+    })));
+  }
+  
+  searchBy(term: string, category?: string): Observable<EntertainmentData[]> {
+    let searchResults = this.searchInLocalData(term);
+    if(searchResults.length > 0) {
+        return of(searchResults);
+    } else {
+      return this.searchInDB(term, category).pipe(
+        map(response => response['results']),
+        map(data => this.transformSearchResults(data))
+      )
+    }
+    }
 }

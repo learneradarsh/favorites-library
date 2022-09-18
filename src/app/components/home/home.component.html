@@ -1,5 +1,5 @@
 <section class="search-box-container">
-<input #searchText type="search" placeholder="Search Planets By Title" (keyup.enter)="search(searchText.value)"/>
+<input #searchText type="search" placeholder="Search Planets By Title" (keyup.enter)="searchByCategory(searchText.value, 'planets')"/>
 </section>
 
 <section class="search-results-container">

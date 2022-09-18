@@ -20,12 +20,13 @@ export class HomeComponent implements OnInit {
   }
 
   onAddToFavorite(item: EntertainmentData): void {
+    console.log(item);
     this.dataService.addItemToFav(item);
   }
 
-  search(term: string): void {
+  searchByCategory(term: string, category: string): void {
     const sanitizedSearchTerm = term.trim().toLowerCase();
-    this.entertainmentItems$ = this.dataService.searchBy(sanitizedSearchTerm);
+    this.entertainmentItems$ = this.dataService.searchBy(sanitizedSearchTerm, category);
   }
 
 }
