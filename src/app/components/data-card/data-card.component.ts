@@ -8,7 +8,7 @@ import { EntertainmentData } from 'src/app/models/Entertainment.model';
 })
 export class DataCardComponent implements OnInit {
   @Input()
-  cardData: any;
+  cardData: EntertainmentData = [] as any;
 
   @Input()
   showButton: boolean = true;

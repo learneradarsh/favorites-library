@@ -3,4 +3,5 @@ export interface EntertainmentData {
     title: string;
     imageUrl?: string;
     isFav: boolean;
+    category?: string;
 }
