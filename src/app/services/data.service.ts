@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, catchError, combineLatest, concatMap, filter, forkJoin, map, Observable, of, retry, share, shareReplay, tap, throwError } from 'rxjs';
 import { EntertainmentData } from '../models/Entertainment.model';
 import * as uuid from 'uuid';
+import { BrowserService } from './browser.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,16 +28,17 @@ export class DataService {
   private myFavoritesSub = new BehaviorSubject<EntertainmentData[]>([]);
   private allEntertainmentDataSub = new BehaviorSubject<EntertainmentData[]>([]);
 
-  constructor(private readonly http: HttpClient) { 
+  constructor(private readonly http: HttpClient,
+    private readonly browserService: BrowserService) { 
     this.getCombinedDataFromAPI$().pipe(
       tap((data) => this.allEntertainmentDataSub.next(data))
     ).subscribe();
 
 
     // load data of myfavs from localstorage if available
-    if(localStorage.getItem('my-fav') != undefined
-    && localStorage.getItem('my-fav') != null) {
-      this.myFavoritesSub.next(JSON.parse(localStorage.getItem('my-fav')!));
+    if(this.browserService.retrieveDataFromLocalStorage('my-fav') != undefined
+    && this.browserService.retrieveDataFromLocalStorage('my-fav') != null) {
+      this.myFavoritesSub.next(JSON.parse(this.browserService.retrieveDataFromLocalStorage('my-fav')!));
     }
     
   }
@@ -80,7 +82,7 @@ export class DataService {
     this.myFavoritesSub.next([...this.myFavoritesSub.value, item]);
 
     // store favorites data to local storage
-    localStorage.setItem('my-fav', JSON.stringify(this.myFavoritesSub.value));
+    this.browserService.storeDataInLocalStorage('my-fav', JSON.stringify(this.myFavoritesSub.value));
 
     // update global entertainment data
     let allEntertainmentData = this.allEntertainmentDataSub.value;
